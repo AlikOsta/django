@@ -13,18 +13,17 @@ path - строки, включая слэши '/'
 Пример:
 path('<str:name>/', views.index, name='index')
 '''
-# url posts/..
 
 app_name = 'blog'
 
 urlpatterns = [
-    #category
+    # category
     path('categories/', views.catalog_categories, name='categories'),
-    path('categories/<slug:category_slug>/', views.category_detali, name="category_detali" ),
-    # tag
+    path('categories/<slug:category_slug>/', views.category_detail, name="category_detail"),
+    # tag 
     path('tags/', views.catalog_tags, name="tags"),
     path('tags/<slug:tag_slug>/', views.tag_detail, name="tag_detail"),
-    #posts
-    path('', views.catalpg_posts, name="posts"),
-    path('<slug:post_slug>/', views.posts_detail, name="posts_detail"),
+    # posts
+    path('', views.catalog_posts, name="posts"),
+    path('<slug:post_slug>/', views.post_detail, name="post_detail"),
 ]
