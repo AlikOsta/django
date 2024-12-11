@@ -14,9 +14,10 @@ CATEGORIES = [
 
 
 def main(request):
-    return HttpResponse("""
+    return HttpResponse(f"""
             <h1>Главная страница</h1>
-            <p>Будут все посты</p>
+            <p><a href="{reverse('blog:categories')}">К списку категорий</a></p>
+            <p><a href="{reverse('blog:tags')}">К списку Тегов</a></p>
          """)
 
 def catalog_categories(request):
@@ -26,7 +27,7 @@ def catalog_categories(request):
         links.append(f'<p><a href="{url}">{category["name"]}</a></p>')
         
     return HttpResponse(f'''
-        <h1>Каталог категорий<h1>
+        <h1>Каталог категорий</h1>
         {''.join(links)}
         <p><a href="{reverse('blog:posts')}">К списку постов</a></p>
     ''')
