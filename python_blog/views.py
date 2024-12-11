@@ -12,13 +12,8 @@ CATEGORIES = [
     {'slug': 'linux', 'name': 'Linux'},
 ]
 
-
 def main(request):
-    return HttpResponse(f"""
-            <h1>Главная страница</h1>
-            <p><a href="{reverse('blog:categories')}">К списку категорий</a></p>
-            <p><a href="{reverse('blog:tags')}">К списку Тегов</a></p>
-         """)
+    return render(request, 'python_blog/main.html')
 
 def catalog_categories(request):
     links = []
