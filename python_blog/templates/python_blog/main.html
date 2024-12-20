@@ -7,9 +7,7 @@
     
 {% block content %}
     {%for post in posts%}
-        <div>
-            <p>{{post.title}}</p>
-        </div>
+        {% include "python_blog/include/card_include.html" %}
     {%endfor%}
 {% endblock content %}
 
