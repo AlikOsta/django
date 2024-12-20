@@ -1,0 +1,10 @@
+
+<nav>
+    <ul>
+        {%for item in nemu_items%}
+            <li>
+                <a href="{%url item.slug%}">{{item.title}}</a>
+            </li>
+        {%endfor%}
+    </ul>
+</nav>

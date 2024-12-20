@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls import reverse
-
 from . import models
 
 CATEGORIES = [
@@ -13,7 +12,16 @@ CATEGORIES = [
 ]
 
 def main(request):
-    return render(request, 'python_blog/main.html')
+    nemu_items = models.Menu.objects.all()
+    posts = models.Post.objects.filter(is_published = True)
+
+    context = {
+       "nemu_items" : nemu_items, 
+       "posts" : posts,
+    }
+
+    return render(request, 'python_blog/main.html', context)
+
 
 def catalog_categories(request):
     links = []
