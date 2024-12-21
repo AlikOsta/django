@@ -1,10 +1,10 @@
 
 <nav>
     <ul>
-        {%for item in nemu_items%}
-            <li>
-                <a href="{%url item.slug%}">{{item.title}}</a>
-            </li>
-        {%endfor%}
+        {% for item in menu_items %}
+        <li>
+            <a href="{% url item.slug %}" class="{% if item.is_active %}active{% endif %}">{{ item.title }}</a>
+        </li>
+    {% endfor %}
     </ul>
 </nav>

@@ -4,29 +4,25 @@ from django.urls import reverse
 from . import models
 
 def main(request):
-    nemu_items = models.Menu.objects.all()
     posts = models.Post.objects.filter(is_published = True).order_by('-updated_at')[:5]
     categoris = models.Categories.objects.all()
     popular_posts = models.Post.objects.filter(is_published=True).order_by('-views')[:5]
 
     context = {
-       "nemu_items" : nemu_items, 
        "posts" : posts,
        "popular_posts" : popular_posts,
        "categories" : categoris,
+       "active_page" : "main",
     }
 
     return render(request, 'python_blog/main.html', context)
 
 
 def category_detail(request, category_slug):
-    nemu_items = models.Menu.objects.all()
     category = models.Categories.objects.get(slug=category_slug)
     posts = models.Post.objects.filter(category=category, is_published=True)
 
-
     context = {
-       "nemu_items" : nemu_items, 
        "categories" : category,
         "posts" : posts,
     }
@@ -34,14 +30,12 @@ def category_detail(request, category_slug):
     return render(request, 'python_blog/category_detail.html', context)
 
 
-
 def catalog_categories(request):
-    categoris = models.Categories.objects.all()
-    nemu_items = models.Menu.objects.all()
+    categories = models.Categories.objects.all()
 
     context = {
-       "nemu_items" : nemu_items, 
-       "categories" : categoris,
+       "categories" : categories,
+       "active_page" : "blog:categories",
     }
 
     return render(request, 'python_blog/categories.html', context)
