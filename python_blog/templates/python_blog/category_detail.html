@@ -6,13 +6,28 @@
 
 {% block content %}
     <div class="container">
+        {%if posts%}
         <h1 class="mb-4">Категория: {{category.category_name}}</h1>
-
         <div class="row row-cols-1 row-cols-md-2 g-4 mb-4">
             {% for post in posts %}
                 {% include "python_blog/include/card_include.html" %}
             {% endfor %}
         </div>
+        {% else %}
+        <div class="row custom-height align-items-center justify-content-center">
+            <div class="col-md-8 text-center">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <i class="bi bi-folder-x display-1 text-muted mb-3"></i>
+                        <h1 class="mb-4">В категории {{category.category_name}} еще нет постов.</h1>
+                        <a href="{% url 'main' %}" class="btn btn-primary">
+                            <i class="bi bi-house"></i> На главную
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
 {% endblock content %}
 

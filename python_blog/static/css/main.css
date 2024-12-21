@@ -5,3 +5,7 @@
     border-radius: 4px;
     text-decoration: none;
 }
+
+.custom-height {
+    height: calc(100vh - 176px);
+}

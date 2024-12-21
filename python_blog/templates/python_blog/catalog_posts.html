@@ -1,0 +1,29 @@
+{% extends 'layout/base.html' %} 
+{% load static %}
+
+{% block title %}Все посты{% endblock title %}
+
+    
+{% block content %}
+
+    <section class="mb-5">
+        <h2 class="mb-4"><i class="bi bi-folder"></i> Категории</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for category in categories %}
+                {% include "python_blog/include/category_include.html" %}
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <h2 class="mb-4"><i class="bi bi-star"></i> Последние посты</h2>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for post in posts %}
+                {% include "python_blog/include/card_include.html" %}
+            {% endfor %}
+        </div>
+    </section>
+
+{% endblock content %}
+
+{% block script %}{% endblock script %}

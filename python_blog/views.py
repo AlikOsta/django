@@ -4,9 +4,9 @@ from django.urls import reverse
 from . import models
 
 def main(request):
-    posts = models.Post.objects.filter(is_published = True).order_by('-updated_at')[:5]
+    posts = models.Post.objects.filter(is_published = True).order_by('-updated_at')[:6]
     categoris = models.Categories.objects.all()
-    popular_posts = models.Post.objects.filter(is_published=True).order_by('-views')[:5]
+    popular_posts = models.Post.objects.filter(is_published=True).order_by('-views')[:6]
 
     context = {
        "posts" : posts,
@@ -45,16 +45,6 @@ def about(request):
     return render(request, 'python_blog/about.html')
 
 
-
-def catalog_tags(request):
-    return HttpResponse('Каталог тегов')
-
-def tag_detail(request, tag_slug):
-    return HttpResponse(f'Тег {tag_slug}')
-
-def catalog_posts(request):
-    return HttpResponse('Каталог постов')
-
 def post_detail(request, post_slug):
     post = models.Post.objects.get(slug=post_slug)
     comments = models.Comments.objects.filter(post=post, is_published=True)
@@ -65,3 +55,23 @@ def post_detail(request, post_slug):
     }
     
     return render(request, 'python_blog/post_detail.html', context)
+
+
+def catalog_posts(request):
+    category = models.Categories.objects.all()
+    posts = models.Post.objects.filter(is_published=True).order_by("-updated_at")
+
+    context = {
+        "category": category,
+        "posts" : posts,
+    }
+
+    return render(request, 'python_blog/catalog_posts.html', context)
+
+
+def catalog_tags(request):
+    return HttpResponse('Каталог тегов')
+
+def tag_detail(request, tag_slug):
+    return HttpResponse(f'Тег {tag_slug}')
+
