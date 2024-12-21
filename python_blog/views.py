@@ -124,7 +124,7 @@ def catalog_posts(request):
     categories = models.Categories.objects.all()
     post_list = models.Post.objects.filter(is_published=True).order_by("-updated_at")
 
-    paginator = Paginator(post_list, 20)
+    paginator = Paginator(post_list, 10)
     page_number = request.GET.get('page', 1)
     posts = paginator.get_page(page_number)
 

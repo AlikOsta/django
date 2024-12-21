@@ -82,7 +82,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name = 'Автор')
     title = models.CharField(max_length=200, unique=True, verbose_name='Заголовок')
     slug = models.SlugField(max_length=200, unique=True)
-    content = models.TextField(max_length=500, verbose_name='Содержание')
+    content = models.TextField( verbose_name='Содержание')
     hashtags = models.ManyToManyField(Tags, blank=True)
     views = models.IntegerField(default=0, verbose_name='Просмотры')
     likes = models.IntegerField(default=0, verbose_name='Лайки')

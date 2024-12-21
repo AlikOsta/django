@@ -48,7 +48,7 @@ class PostAdmin(admin.ModelAdmin):
         inlines: Встроенные формы (TagsInline для управления тегами)
         exclude: Исключенные поля из формы редактирования (slug генерируется автоматически, hashtags управляются через inline-форму)
     """
-    list_display = ('id', 'title', 'slug', 'author', 'created_at')
+    list_display = ('id', 'title', 'is_published', 'slug', 'author', 'created_at')
     inlines = [TagsInline]
     exclude = ('slug', 'hashtags')
 
