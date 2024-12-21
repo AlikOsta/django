@@ -1,8 +1,38 @@
-<div>
-    <h3>{{post.title}}</h3>
-    <p>Слаг: {{post.slug}}</p>
-    <p>Просмотры: {{post.views}}</p>
-    <a href="{% url "blog:post_detail" post.slug %}">Просмотр</a>
-    <hr>
+<div class="col">
+    <div class="card h-100 shadow-sm">
+        {% if post.image %}
+            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{ post.title }}</h5>
+            <p class="card-text">{{ post.content|truncatewords:20 }}</p>
+            
+            <div class="mb-2">
+                <span class="badge bg-primary">
+                    <i class="bi bi-folder"></i> {{ post.category.category_name }}
+                </span>
+                {% if post.hashtags %}
+                    <span class="badge bg-secondary">
+                        <i class="bi bi-hash"></i> {{ post.hashtags }}
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="small text-muted">
+                    <i class="bi bi-person"></i> {{ post.author.username }}<br>
+                    <i class="bi bi-calendar"></i> {{ post.created_at|date:"d.m.Y" }}
+                </div>
+                <div class="text-end">
+                    <div class="mb-2">
+                        <i class="bi bi-eye"></i> {{ post.views }}
+                        <i class="bi bi-heart ms-2"></i> {{ post.likes }}
+                    </div>
+                    <a href="{% url 'blog:post_detail' post.slug %}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-arrow-right"></i> Читать
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-    
