@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.urls import reverse
 from . import models
+
 
 def main(request):
     """На главной странице отображаться сборная информация: последние посты, популярные статьи, категории.
@@ -107,7 +109,7 @@ def post_detail(request, post_slug):
 
 
 def catalog_posts(request):
-    """Отображает каталог всех постов с фильтрацией по дате обновления.
+    """Отображает каталог всех постов с фильтрацией по дате обновления и пагинацией по 20 постов на странице.
     
     Выводит:
     - Список всех категорий
@@ -120,11 +122,15 @@ def catalog_posts(request):
         HttpResponse: Отрендеренный шаблон catalog_posts.html с контекстом
     """
     categories = models.Categories.objects.all()
-    posts = models.Post.objects.filter(is_published=True).order_by("-updated_at")
+    post_list = models.Post.objects.filter(is_published=True).order_by("-updated_at")
+
+    paginator = Paginator(post_list, 20)
+    page_number = request.GET.get('page', 1)
+    posts = paginator.get_page(page_number)
 
     context = {
         "categories": categories,
-        "posts" : posts,
+        "posts": posts,
     }
 
     return render(request, 'python_blog/catalog_posts.html', context)

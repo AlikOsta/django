@@ -16,12 +16,37 @@
     </section>
 
     <section class="mb-5">
-        <h2 class="mb-4"><i class="bi bi-star"></i> Последние посты</h2>
+        <h2 class="mb-4"><i class="bi bi-star"></i>Все посты блога</h2>
         <div class="row row-cols-1 row-cols-md-2 g-4">
             {% for post in posts %}
                 {% include "python_blog/include/card_include.html" %}
             {% endfor %}
         </div>
+        {% if posts.has_other_pages %}
+        <nav class="mt-5">
+            <ul class="pagination-custom d-flex justify-content-center align-items-center gap-3">
+                {% if posts.has_previous %}
+                    <li>
+                        <a href="?page={{ posts.previous_page_number }}" class="pagination-circle small">
+                            {{ posts.previous_page_number }}
+                        </a>
+                    </li>
+                {% endif %}
+
+                <li>
+                    <span class="pagination-circle active">{{ posts.number }}</span>
+                </li>
+
+                {% if posts.has_next %}
+                    <li>
+                        <a href="?page={{ posts.next_page_number }}" class="pagination-circle small">
+                            {{ posts.next_page_number }}
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
     </section>
 
 {% endblock content %}
