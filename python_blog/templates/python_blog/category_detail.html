@@ -1,0 +1,22 @@
+
+{% extends 'layout/base.html' %} 
+{% load static %}
+
+{% block title %}Категория: {{category.category_name}} {% endblock title %}
+
+{% block content %}
+
+    <h1>Категория: {{category.category_name}}</h1>
+
+    <h1>Список постов</h1>
+    
+    {%for post in posts%}
+        {% include "python_blog/include/card_include.html" %}
+    {%endfor%}
+
+{% endblock content %}
+
+
+{% block footer %}{% endblock footer %}
+
+{% block script %}{% endblock script %}

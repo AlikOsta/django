@@ -5,12 +5,28 @@
 {% block title %}Главная страница!{% endblock title %}
 
     
+
 {% block content %}
+
+    <h1>Католог категорий</h1>
+    {%for category in categories%}
+        {% include "python_blog/include/category_include.html" %}
+    {%endfor%}
+
+    <h1>Последние посты</h1>
     {%for post in posts%}
         {% include "python_blog/include/card_include.html" %}
     {%endfor%}
+
+    <h1>Популярные посты</h1>
+    {%for post in popular_posts%}
+        {% include "python_blog/include/card_include.html" %}
+    {%endfor%}
+
+
 {% endblock content %}
 
-{% block footer %}футер{% endblock footer %}
+
+{% block footer %}{% endblock footer %}
 
 {% block script %}{% endblock script %}
