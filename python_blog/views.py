@@ -4,6 +4,18 @@ from django.urls import reverse
 from . import models
 
 def main(request):
+    """На главной странице отображаться сборная информация: последние посты, популярные статьи, категории.
+    Выводит:
+    - 6 последних опубликованных постов, отсортированных по дате обновления
+    - Все доступные категории
+    - 6 самых популярных постов по количеству просмотров
+    
+    Args:
+        request: Объект HTTP-запроса
+        
+    Returns:
+        HttpResponse: Отрендеренный шаблон main.html с контекстом
+    """
     posts = models.Post.objects.filter(is_published = True).order_by('-updated_at')[:6]
     categoris = models.Categories.objects.all()
     popular_posts = models.Post.objects.filter(is_published=True).order_by('-views')[:6]
@@ -19,6 +31,16 @@ def main(request):
 
 
 def category_detail(request, category_slug):
+    """Отображает детальную страницу категории.
+    Выводит все опубликованные посты, относящиеся к выбранной категории.
+    
+    Args:
+        request: Объект HTTP-запроса
+        category_slug: Слаг категории для фильтрации
+        
+    Returns:
+        HttpResponse: Отрендеренный шаблон category_detail.html с контекстом
+    """
     category = models.Categories.objects.get(slug=category_slug)
     posts = models.Post.objects.filter(category=category, is_published=True)
 
@@ -31,21 +53,48 @@ def category_detail(request, category_slug):
 
 
 def catalog_categories(request):
+    """Отображает каталог всех категорий блога. Не понимаю зачем этот шаблон, но он есть в макете.
+    
+    Выводит список всех доступных категорий.
+    
+    Args:
+        request: Объект HTTP-запроса
+        
+    Returns:
+        HttpResponse: Отрендеренный шаблон categories.html с контекстом
+    """
     categories = models.Categories.objects.all()
 
     context = {
        "categories" : categories,
-       "active_page" : "blog:categories",
     }
 
     return render(request, 'python_blog/categories.html', context)
 
 
 def about(request):
+    """Отображает страницу "О нас".
+    
+    Args:
+        request: Объект HTTP-запроса
+        
+    Returns:
+        HttpResponse: Отрендеренный шаблон about.html
+    """
     return render(request, 'python_blog/about.html')
 
 
 def post_detail(request, post_slug):
+    """Отображает детальную страницу поста.    
+    Выводит содержимое поста и все опубликованные комментарии к нему.
+    
+    Args:
+        request: Объект HTTP-запроса
+        post_slug: Слаг поста для поиска
+        
+    Returns:
+        HttpResponse: Отрендеренный шаблон post_detail.html с контекстом
+    """
     post = models.Post.objects.get(slug=post_slug)
     comments = models.Comments.objects.filter(post=post, is_published=True)
 
@@ -58,11 +107,23 @@ def post_detail(request, post_slug):
 
 
 def catalog_posts(request):
-    category = models.Categories.objects.all()
+    """Отображает каталог всех постов с фильтрацией по дате обновления.
+    
+    Выводит:
+    - Список всех категорий
+    - Все опубликованные посты, отсортированные по дате обновления
+    
+    Args:
+        request: Объект HTTP-запроса
+        
+    Returns:
+        HttpResponse: Отрендеренный шаблон catalog_posts.html с контекстом
+    """
+    categories = models.Categories.objects.all()
     posts = models.Post.objects.filter(is_published=True).order_by("-updated_at")
 
     context = {
-        "category": category,
+        "categories": categories,
         "posts" : posts,
     }
 

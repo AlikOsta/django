@@ -1,5 +1,10 @@
 from django.contrib import admin
-from .models import Menu, Categories, Post, Comments
+from .models import Menu, Categories, Post, Comments, Tags
+
+class TagsInline(admin.TabularInline):
+    model = Post.hashtags.through
+    extra = 1
+
 
 admin.site.register(Menu)
 
@@ -18,4 +23,10 @@ class CommentsAdmin(admin.ModelAdmin):
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'slug', 'author', 'created_at')
-    exclude = ('slug',)
+    inlines = [TagsInline]
+    exclude = ('slug', 'hashtags')
+
+
+@admin.register(Tags)
+class TagsAdmin(admin.ModelAdmin):
+    list_display = ['name']

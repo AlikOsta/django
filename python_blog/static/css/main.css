@@ -9,3 +9,11 @@
 .custom-height {
     height: calc(100vh - 176px);
 }
+
+.hover-card {
+    transition: transform 0.3s ease-in-out;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+}

@@ -1,5 +1,5 @@
 <div class="col">
-    <div class="card h-100 shadow-sm position-relative" style="transition: transform 0.3s ease-in-out;">
+    <div class="card h-100 hover-card shadow-sm position-relative" style="transition: transform 0.3s ease-in-out;">
         <a href="{% url 'blog:post_detail' post.slug %}" class="text-decoration-none text-dark stretched-link">
             {% if post.image %}
                 <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
@@ -12,10 +12,14 @@
                     <span class="badge bg-primary">
                         <i class="bi bi-folder"></i> {{ post.category.category_name }}
                     </span>
-                    {% if post.hashtags %}
-                        <span class="badge bg-secondary">
-                            <i class="bi bi-hash"></i> {{ post.hashtags }}
-                        </span>
+                    {% if post.hashtags.all %}
+                    <div class="mb-2">
+                        {% for tag in post.hashtags.all %}
+                            <span class="badge bg-secondary">
+                                <i class="bi bi-hash"></i> {{ tag.name }}
+                            </span>
+                        {% endfor %}
+                    </div>
                     {% endif %}
                 </div>
 

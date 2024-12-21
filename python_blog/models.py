@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-# from django.utils.text import slugify
 from slugify import slugify
 
 
@@ -34,13 +33,24 @@ class Categories(models.Model):
         verbose_name_plural = 'Категории'
 
 
+class Tags(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+
+
 class Post(models.Model):
     '''Модель для постов'''
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name = 'Автор')
     title = models.CharField(max_length=200, unique=True, verbose_name='Заголовок')
     slug = models.SlugField(max_length=200, unique=True)
     content = models.TextField(max_length=500, verbose_name='Содержание')
-    hashtags = models.TextField(max_length=50, null=True)
+    hashtags = models.ManyToManyField(Tags, blank=True)
     views = models.IntegerField(default=0, verbose_name='Просмотры')
     likes = models.IntegerField(default=0, verbose_name='Лайки')
     category = models.ForeignKey(Categories, on_delete=models.CASCADE, verbose_name='Категория')

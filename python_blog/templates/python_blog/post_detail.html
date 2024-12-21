@@ -8,6 +8,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <article class="card shadow-sm">
+
                 {% if post.image %}
                     <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}" style="max-height: 400px; object-fit: cover;">
                 {% endif %}
@@ -26,14 +27,18 @@
                         </div>
                     </div>
 
-                    <div class="mb-4">
+                    <div class="mb-2">
                         <span class="badge bg-primary">
                             <i class="bi bi-folder"></i> {{ post.category.category_name }}
                         </span>
-                        {% if post.hashtags %}
-                            <span class="badge bg-secondary">
-                                <i class="bi bi-hash"></i> {{ post.hashtags }}
-                            </span>
+                        {% if post.hashtags.all %}
+                        <div class="mb-2">
+                            {% for tag in post.hashtags.all %}
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-hash"></i> {{ tag.name }}
+                                </span>
+                            {% endfor %}
+                        </div>
                         {% endif %}
                     </div>
 
