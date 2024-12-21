@@ -56,4 +56,12 @@ def catalog_posts(request):
     return HttpResponse('Каталог постов')
 
 def post_detail(request, post_slug):
-    return HttpResponse(f'Пост {post_slug}')
+    post = models.Post.objects.get(slug=post_slug)
+    comments = models.Comments.objects.filter(post=post, is_published=True)
+
+    context = {
+        "post": post,
+        "comments": comments,
+    }
+    
+    return render(request, 'python_blog/post_detail.html', context)
