@@ -4,6 +4,12 @@ from slugify import slugify
 
 
 class Menu(models.Model):
+    """Модель для хранения пунктов меню сайта. Мне кажется что это не нужно, но я не уверен.
+    
+    Attributes:
+        title (str): Название пункта меню, уникальное поле
+        slug (str): URL-путь для пункта меню
+    """
     title = models.CharField(max_length=100, unique=True, verbose_name='Название')
     slug = models.CharField(max_length=100, verbose_name="URL")
 
@@ -16,7 +22,13 @@ class Menu(models.Model):
 
 
 class Categories(models.Model):
-    '''Модель для категорий'''
+    """Модель для хранения категорий постов.
+    При сохранении автоматически генерирует slug из названия категории.
+    
+    Attributes:
+        category_name (str): Название категории, уникальное поле
+        slug (str): Автоматически генерируемый URL-путь категории
+    """
     category_name = models.CharField(max_length=100, unique=True, verbose_name='Название')
     slug = models.SlugField(max_length=100)
 
@@ -34,6 +46,11 @@ class Categories(models.Model):
 
 
 class Tags(models.Model):
+    """Модель для хранения тегов постов.
+    
+    Attributes:
+        name (str): Название тега, уникальное поле
+    """
     name = models.CharField(max_length=50, unique=True)
     
     def __str__(self):
@@ -45,7 +62,23 @@ class Tags(models.Model):
 
 
 class Post(models.Model):
-    '''Модель для постов'''
+    """Модель для хранения постов блога.
+    При сохранении автоматически генерирует slug из заголовка поста.
+    
+    Attributes:
+        author (User): Автор поста, связь с моделью User
+        title (str): Заголовок поста, уникальное поле
+        slug (str): Автоматически генерируемый URL-путь поста
+        content (str): Текст поста
+        hashtags (ManyToManyField): Связь с моделью Tags, для выбора и хранения тегов
+        views (int): Количество просмотров поста, пока просто числа
+        likes (int): Количество лайков поста, пока просто числа
+        category (Categories): Категория поста, связь с моделью Categories
+        created_at (datetime): Дата создания поста
+        updated_at (datetime): Дата последнего обновления поста
+        image (ImageField): Изображение поста
+        is_published (bool): Статус публикации поста
+    """
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name = 'Автор')
     title = models.CharField(max_length=200, unique=True, verbose_name='Заголовок')
     slug = models.SlugField(max_length=200, unique=True)
@@ -70,7 +103,16 @@ class Post(models.Model):
 
 
 class Comments(models.Model):
-    '''Модель для комментариев'''
+    """Модель для хранения комментариев к постам.
+    
+    Attributes:
+        author (User): Автор комментария, связь с моделью User
+        content (str): Текст комментария
+        post (Post): Пост к которому относится комментарий, связь с моделью Post
+        created_at (datetime): Дата создания комментария
+        updated_at (datetime): Дата последнего обновления комментария
+        is_published (bool): Статус публикации комментария
+    """
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     content = models.TextField(max_length=500, verbose_name='Комментарий')
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
