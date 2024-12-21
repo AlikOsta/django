@@ -1,12 +1,14 @@
 <div class="col">
     <div class="card h-100">
-        <div class="card-body">
-            <h5 class="card-title">
-                <i class="bi bi-folder2"></i>
-                <a href="{% url 'blog:category_detail' category.slug %}" class="text-decoration-none">
-                    {{ category.category_name }}
-                </a>
-            </h5>
-        </div>
+        <a href="{% url 'blog:category_detail' category.slug %}" class="text-decoration-none">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-folder2"></i>
+                    
+                        {{ category.category_name }}
+                    
+                </h5>
+            </div>
+        </a>
     </div>
 </div>

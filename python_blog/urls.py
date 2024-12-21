@@ -26,4 +26,6 @@ urlpatterns = [
     # posts
     path('', views.catalog_posts, name="posts"),
     path('<slug:post_slug>/', views.post_detail, name="post_detail"),
+    #доп страницы 
+    path('about/', views.about, name="about"),
 ]

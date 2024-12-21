@@ -23,7 +23,7 @@ def category_detail(request, category_slug):
     posts = models.Post.objects.filter(category=category, is_published=True)
 
     context = {
-       "categories" : category,
+       "category" : category,
         "posts" : posts,
     }
 
@@ -39,6 +39,10 @@ def catalog_categories(request):
     }
 
     return render(request, 'python_blog/categories.html', context)
+
+
+def about(request):
+    return render(request, 'python_blog/about.html')
 
 
 
