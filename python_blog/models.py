@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from slugify import slugify
+from django.urls import reverse
 
 
 class Menu(models.Model):
@@ -39,6 +40,9 @@ class Categories(models.Model):
         if not self.slug:
             self.slug = slugify(self.category_name)
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("block:category_detali", args=[self.slug])
     
     class Meta:
         verbose_name = 'Категория'
@@ -86,7 +90,7 @@ class Post(models.Model):
     hashtags = models.ManyToManyField(Tags, blank=True)
     views = models.IntegerField(default=0, verbose_name='Просмотры')
     likes = models.IntegerField(default=0, verbose_name='Лайки')
-    category = models.ForeignKey(Categories, on_delete=models.CASCADE, verbose_name='Категория')
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE, related_name='posts', verbose_name='Категория')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     image = models.ImageField(upload_to='media/posts/')
@@ -96,6 +100,9 @@ class Post(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("block:post_detail", args=[self.slug])
 
     class Meta:
         verbose_name = 'Пост'
