@@ -87,7 +87,7 @@ class Post(models.Model):
     title = models.CharField(max_length=200, unique=True, verbose_name='Заголовок')
     slug = models.SlugField(max_length=200, unique=True)
     content = models.TextField( verbose_name='Содержание')
-    hashtags = models.ManyToManyField(Tags, blank=True)
+    hashtags = models.ManyToManyField(Tags, blank=True, verbose_name='Теги', related_name='posts')
     views = models.IntegerField(default=0, verbose_name='Просмотры')
     likes = models.IntegerField(default=0, verbose_name='Лайки')
     category = models.ForeignKey(Categories, on_delete=models.CASCADE, related_name='posts', verbose_name='Категория')
