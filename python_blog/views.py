@@ -129,3 +129,7 @@ def catalog_tags(request):
 def tag_detail(request, tag_slug):
     return HttpResponse(f'Тег {tag_slug}')
 
+
+def about(request):
+    return render(request, 'python_blog/about.html')
+

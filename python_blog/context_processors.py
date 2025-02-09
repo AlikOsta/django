@@ -9,6 +9,7 @@ def menu_items(request):
     {"title": "Все посты", "url_name": "blog:posts"},
     {"title": "Категории", "url_name": "blog:categories"},
     {"title": "Теги", "url_name": "blog:tags"},
+    {"title": "О нас", "url_name": "blog:about"},
 ]
     current_url_name = request.resolver_match.view_name
     

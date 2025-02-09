@@ -17,6 +17,8 @@ path('<str:name>/', views.index, name='index')
 app_name = 'blog'
 
 urlpatterns = [
+    # about
+    path('about/', views.about, name="about"),
     # category
     path('categories/', views.catalog_categories, name='categories'),
     path('categories/<slug:category_slug>/', views.category_detail, name="category_detail"),
@@ -26,5 +28,7 @@ urlpatterns = [
     # posts
     path('', views.catalog_posts, name="posts"),
     path('<slug:post_slug>/', views.post_detail, name="post_detail"),
+    
+
 
 ]
