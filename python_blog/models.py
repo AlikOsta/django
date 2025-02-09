@@ -4,28 +4,9 @@ from slugify import slugify
 from django.urls import reverse
 
 
-class Menu(models.Model):
-    """Модель для хранения пунктов меню сайта. Мне кажется что это не нужно, но я не уверен.
-    
-    Attributes:
-        title (str): Название пункта меню, уникальное поле
-        slug (str): URL-путь для пункта меню
-    """
-    title = models.CharField(max_length=100, unique=True, verbose_name='Название')
-    slug = models.CharField(max_length=100, verbose_name="URL")
-
-    def __str__(self):
-        return self.title
-        
-    class Meta:
-        verbose_name = 'Меню'
-        verbose_name_plural = 'Меню'
-
-
 class Categories(models.Model):
     """Модель для хранения категорий постов.
     При сохранении автоматически генерирует slug из названия категории.
-    
     Attributes:
         category_name (str): Название категории, уникальное поле
         slug (str): Автоматически генерируемый URL-путь категории
@@ -51,7 +32,6 @@ class Categories(models.Model):
 
 class Tags(models.Model):
     """Модель для хранения тегов постов.
-    
     Attributes:
         name (str): Название тега, уникальное поле
     """
@@ -68,7 +48,6 @@ class Tags(models.Model):
 class Post(models.Model):
     """Модель для хранения постов блога.
     При сохранении автоматически генерирует slug из заголовка поста.
-    
     Attributes:
         author (User): Автор поста, связь с моделью User
         title (str): Заголовок поста, уникальное поле
@@ -111,7 +90,6 @@ class Post(models.Model):
 
 class Comments(models.Model):
     """Модель для хранения комментариев к постам.
-    
     Attributes:
         author (User): Автор комментария, связь с моделью User
         content (str): Текст комментария

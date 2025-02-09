@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Menu, Categories, Post, Comments, Tags
+from .models import Categories, Post, Comments, Tags
 
 class TagsInline(admin.TabularInline):
     """Встроенная админ-форма для отображения тегов в постах.
@@ -11,9 +11,6 @@ class TagsInline(admin.TabularInline):
     """
     model = Post.hashtags.through
     extra = 1
-
-
-admin.site.register(Menu)
 
 
 @admin.register(Categories)

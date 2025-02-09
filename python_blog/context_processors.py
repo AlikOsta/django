@@ -1,10 +1,18 @@
-from . import models
+"""
+Контекстный процессор передающий меню в каждый шаблон Джанго!
+
+"""
 
 def menu_items(request):
-    menu_items = models.Menu.objects.all()
-    current_url_name = request.resolver_match.view_name if request.resolver_match else ''
+    menu = [
+    {"title": "Главная", "url_name": "main"},
+    {"title": "Все посты", "url_name": "blog:posts"},
+    {"title": "Категории", "url_name": "blog:categories"},
+    {"title": "Теги", "url_name": "blog:tags"},
+]
+    current_url_name = request.resolver_match.view_name
     
-    for item in menu_items:
-        item.is_active = current_url_name == item.slug
+    for item in menu:
+        item['is_active'] = current_url_name == item['url_name']
 
-    return {'menu_items': menu_items}
+    return {'menu_items': menu}
