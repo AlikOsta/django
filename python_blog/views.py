@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.db.models import Count
+from django.db.models import F, Q
+from django.contrib import messages
 from django.http import HttpResponse
 from django.urls import reverse
 from . import models
@@ -90,13 +92,19 @@ def post_detail(request, post_slug):
         HttpResponse: Отрендеренный шаблон post_detail.html с контекстом
     """
     post = models.Post.objects.select_related('category', 'author').prefetch_related('hashtags').get(slug=post_slug)
+    viewed_posts = request.session.get('viewed_posts', [])
+
+    if post.id not in viewed_posts:
+        models.Post.objects.filter(pk=post.pk).update(views=F('views') + 1)
+        viewed_posts.append(post.id)
+        request.session['viewed_posts'] = viewed_posts
+    
     comments = models.Comments.objects.filter(post=post, is_published=True)
 
     context = {
         "post": post,
         "comments": comments,
     }
-
     return render(request, 'python_blog/post_detail.html', context)
 
 
@@ -112,9 +120,31 @@ def catalog_posts(request):
     """
 
     categories = models.Categories.objects.annotate(post_count=Count('posts'))
-    post_list = models.Post.objects.select_related('category', 'author').prefetch_related('hashtags').filter(is_published=True)
+    posts = models.Post.objects.select_related('category', 'author').prefetch_related('hashtags').filter(is_published=True)
+    
+    search_query = request.GET.get('search_query', '')
+    
+    if search_query:
+        q_object = Q()
+        
+        # Check which search fields are selected
+        if request.GET.get('search_content') == '1':
+            q_object |= Q(content__icontains=search_query)
+        if request.GET.get('search_title') == '1':
+            q_object |= Q(title__icontains=search_query)
+        if request.GET.get('search_tags') == '1':
+            q_object |= Q(hashtags__name__icontains=search_query)
+            
+        # If no checkboxes selected, search in content by default
+        if not q_object:
+            q_object = Q(content__icontains=search_query)
+            
+        posts = posts.filter(q_object).distinct()
+        
+        # Add search results message
+        messages.info(request, f'Найдено {posts.count()} результатов по запросу "{search_query}"')
 
-    paginator = Paginator(post_list, 10)
+    paginator = Paginator(posts, 10)
     page_number = request.GET.get('page', 1)
     posts = paginator.get_page(page_number)
 
@@ -122,7 +152,7 @@ def catalog_posts(request):
         "categories": categories,
         "posts": posts,
     }
-
+    
     return render(request, 'python_blog/catalog_posts.html', context)
 
 
