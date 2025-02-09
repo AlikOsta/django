@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
+from django.db.models import Count
 from django.http import HttpResponse
 from django.urls import reverse
 from . import models
+
 
 
 def main(request):
@@ -16,14 +18,14 @@ def main(request):
     Returns:
         HttpResponse: Отрендеренный шаблон main.html с контекстом
     """
-    posts = models.Post.objects.filter(is_published = True).order_by('-updated_at')[:6]
-    categoris = models.Categories.objects.all()
-    popular_posts = models.Post.objects.filter(is_published=True).order_by('-views')[:6]
+    posts = models.Post.objects.select_related('category', 'author').prefetch_related('hashtags').filter(is_published=True).order_by('-updated_at')[:6]
+    categories = models.Categories.objects.annotate(post_count=Count('posts'))
+    popular_posts = models.Post.objects.select_related('category', 'author').prefetch_related('hashtags').filter(is_published=True).order_by('-views')[:6]
 
     context = {
        "posts" : posts,
        "popular_posts" : popular_posts,
-       "categories" : categoris,
+       "categories" : categories,
     }
 
     return render(request, 'python_blog/main.html', context)
@@ -39,7 +41,7 @@ def category_detail(request, category_slug):
         HttpResponse: Отрендеренный шаблон category_detail.html с контекстом
     """
     category = models.Categories.objects.get(slug=category_slug)
-    posts = models.Post.objects.filter(category=category, is_published=True)
+    posts = models.Post.objects.select_related('category', 'author').prefetch_related('hashtags').filter(category=category, is_published=True)
 
     context = {
        "category" : category,
@@ -87,7 +89,7 @@ def post_detail(request, post_slug):
     Returns:
         HttpResponse: Отрендеренный шаблон post_detail.html с контекстом
     """
-    post = models.Post.objects.get(slug=post_slug)
+    post = models.Post.objects.select_related('category', 'author').prefetch_related('hashtags').get(slug=post_slug)
     comments = models.Comments.objects.filter(post=post, is_published=True)
 
     context = {
@@ -108,8 +110,9 @@ def catalog_posts(request):
     Returns:
         HttpResponse: Отрендеренный шаблон catalog_posts.html с контекстом
     """
-    categories = models.Categories.objects.all()
-    post_list = models.Post.objects.select_related('category', 'author').prefetch_related('hashtags').all()
+
+    categories = models.Categories.objects.annotate(post_count=Count('posts'))
+    post_list = models.Post.objects.select_related('category', 'author').prefetch_related('hashtags').filter(is_published=True)
 
     paginator = Paginator(post_list, 10)
     page_number = request.GET.get('page', 1)
