@@ -60,7 +60,7 @@ def catalog_categories(request):
     Returns:
         HttpResponse: Отрендеренный шаблон categories.html с контекстом
     """
-    categories = models.Categories.objects.all()
+    categories = models.Categories.objects.annotate(post_count=Count('posts'))
 
     context = {
        "categories" : categories,

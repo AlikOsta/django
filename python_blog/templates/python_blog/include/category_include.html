@@ -1,16 +1,15 @@
-<div class="col-12 col-md-6 col-lg-4">
-    <div class="card h-100 shadow-sm hover-card">
-        <div class="card-body">
-            <a href="{% url 'blog:category_detail' category.slug %}" class="text-decoration-none">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-folder2 fs-3 me-3 text-primary"></i>
-                    <div>
-                        <h5 class="card-title mb-0">{{ category.category_name }}</h5>
-                        <small class="text-muted">Перейти к постам</small>
-                    </div>
-                </div>
-            </a>
-        </div>
+<div class="col">
+    <div class="card h-100 hover-card shadow-sm" style="transition: transform 0.3s ease-in-out;">
+        <a href="{% url 'blog:category_detail' category.slug %}" class="text-decoration-none text-dark">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-folder2"></i> {{ category.category_name }}
+                </h5>
+                <p class="card-text text-muted">
+                    <i class="bi bi-file-text"></i> {{ category.post_count }} постов
+                </p>
+            </div>
+        </a>
     </div>
 </div>
 
