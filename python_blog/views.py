@@ -122,27 +122,31 @@ def catalog_posts(request):
     categories = models.Categories.objects.annotate(post_count=Count('posts'))
     posts = models.Post.objects.select_related('category', 'author').prefetch_related('hashtags').filter(is_published=True)
     
+    # Поиск
     search_query = request.GET.get('search_query', '')
-    
     if search_query:
         q_object = Q()
-        
-        # Check which search fields are selected
         if request.GET.get('search_content') == '1':
             q_object |= Q(content__icontains=search_query)
         if request.GET.get('search_title') == '1':
             q_object |= Q(title__icontains=search_query)
         if request.GET.get('search_tags') == '1':
             q_object |= Q(hashtags__name__icontains=search_query)
-            
-        # If no checkboxes selected, search in content by default
+        
         if not q_object:
             q_object = Q(content__icontains=search_query)
-            
-        posts = posts.filter(q_object).distinct()
         
-        # Add search results message
+        posts = posts.filter(q_object).distinct()
         messages.info(request, f'Найдено {posts.count()} результатов по запросу "{search_query}"')
+
+    # Сортировка
+    sort_by = request.GET.get('sort_by', 'created_date')
+    if sort_by == 'view_count':
+        posts = posts.order_by('-views')
+    elif sort_by == 'update_date':
+        posts = posts.order_by('-updated_at')
+    else:
+        posts = posts.order_by('-created_at')
 
     paginator = Paginator(posts, 10)
     page_number = request.GET.get('page', 1)
