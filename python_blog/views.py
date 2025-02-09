@@ -3,9 +3,12 @@ from django.core.paginator import Paginator
 from django.db.models import Count
 from django.db.models import F, Q
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponse
 from django.urls import reverse
 from . import models
+from .forms import PostForm
 
 
 
@@ -170,3 +173,47 @@ def tag_detail(request, tag_slug):
 def about(request):
     return render(request, 'python_blog/about.html')
 
+
+
+@login_required
+def post_create(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            form.save_m2m()  # Сохраняем связи many-to-many
+            messages.success(request, 'Пост успешно создан!')
+            return redirect('blog:post_detail', post_slug=post.slug)
+    else:
+        form = PostForm()
+    
+    return render(request, 'python_blog/post_form.html', {
+        'form': form,
+        'title': 'Создание поста',
+        'button_text': 'Создать пост'
+    })
+
+@login_required
+def post_update(request, post_slug):
+    post = get_object_or_404(models.Post, slug=post_slug)
+    
+    if request.user != post.author:
+        messages.error(request, 'У вас нет прав для редактирования этого поста')
+        return redirect('blog:post_detail', post_slug=post_slug)
+    
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Пост успешно обновлен!')
+            return redirect('blog:post_detail', post_slug=post.slug)
+    else:
+        form = PostForm(instance=post)
+    
+    return render(request, 'python_blog/post_form.html', {
+        'form': form,
+        'title': 'Редактирование поста',
+        'button_text': 'Сохранить изменения'
+    })
